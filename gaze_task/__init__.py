@@ -21,8 +21,8 @@ class Task(object):
                  number of image flases to perform before quitting
        height : int
                 height of canvas in number of pixels
-       weidgh : int
-                width of canvas in number of pixels
+       width : int
+               width of canvas in number of pixels
     '''
     def __init__(self, root, images,
                  width=500, height=500, n_iters=500, delta_t=100):
