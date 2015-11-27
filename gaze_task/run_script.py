@@ -8,7 +8,7 @@ import argparse
 import sys
 from PyQt4 import QtGui
 from argparseui import ArgparseUi
-from pygaze import libscreen
+from pygaze.libscreen import Display, Screen
 from pygaze.eyetracker import EyeTracker
 
 
@@ -42,7 +42,7 @@ def main():
     images = [args.image1, args.image2]
     root = tk.Tk()
 
-    disp = libscreen.Display(disptype='psychopy', screennr=1)
+    disp = Display(disptype='psychopy', screennr=1)
     tobii = EyeTracker(disp, trackertype='tobii')
 
     task = Task(root, images,
