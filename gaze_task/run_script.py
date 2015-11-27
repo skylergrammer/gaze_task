@@ -1,6 +1,9 @@
 #!/usr/bin/env python
+try:
+    import tkinter as tk
+except:
+    import Tkinter as tk
 from gaze_task.framework import Task
-import tkinter as tk
 import argparse
 import sys
 from PyQt4 import QtGui
