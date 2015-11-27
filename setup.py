@@ -19,7 +19,7 @@ here = path.abspath(path.dirname(__file__))
 print(find_packages())
 
 setup(
-    name='tobii_tasks',
+    name='gaze_tasks',
 
     # Versions should comply with PEP440.  For a discussion on single-sourcing
     # the version across setup.py and the project code, see
@@ -90,7 +90,7 @@ setup(
     # pip to create the appropriate form of executable for the target platform.
     entry_points={
         'console_scripts': [
-            'gaze_task_run=tobii_tasks.run_script:main'
+            'gaze_task_run=gaze_task.run_script:main'
         ],
     },
 )
