@@ -29,7 +29,7 @@ class Task(object):
     '''
     def __init__(self, root, images,
                  width=500, height=500, autosize=False,
-                 n_iters=500, delta_t=100):
+                 n_iters=500, delta_t=100, eyetracker=None):
 
         self.root = root
         images_open = [Image.open(x) for x in images]
@@ -47,6 +47,12 @@ class Task(object):
         self.img = self.canvas.create_image(0, 0, anchor=tk.NW,
                                             image=self.images[0])
         self.iter_ = 0
+        self.eyetracker = eyetracker
+
+        if self.eyetracker is not None:
+            self.eyetracker.start_recording()
+        else:
+            sys.exit('ERROR: must attach eyetracker object!')
 
     def _flash(self):
 
@@ -54,7 +60,8 @@ class Task(object):
            delta_t milliseconds.
         '''
         # TODO used to store the results of the eye tracking poll
-        self.is_focused = True
+        position = self.eyetracker.sample()
+        self.is_focused = check_focus(position)
 
         if self.iter_ < self.n_iters:
             if self.is_focused:
@@ -69,6 +76,7 @@ class Task(object):
                 self.canvas.itemconfig(self.img, image=self.last_image)
                 self.canvas.after(self.delta_t, self._flash)
         else:
+            self.eyetracker.stop_recording()
             sys.exit()
 
     def start(self):
@@ -82,3 +90,11 @@ def fake_eye_tracker(iter_):
         return False
     else:
         return True
+
+
+def check_focus(position):
+    x, y = position
+    if x >= 0 and y >= 0:
+        return True
+    else:
+        return False
