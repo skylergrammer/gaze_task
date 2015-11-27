@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-from gaze_task import Task
+from gaze_task.framework import Task
 import tkinter as tk
 import argparse
 import sys
