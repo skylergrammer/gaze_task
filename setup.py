@@ -19,7 +19,7 @@ here = path.abspath(path.dirname(__file__))
 print(find_packages())
 
 setup(
-    name='gaze_tasks',
+    name='gaze_task',
 
     # Versions should comply with PEP440.  For a discussion on single-sourcing
     # the version across setup.py and the project code, see
