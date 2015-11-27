@@ -8,9 +8,9 @@ import argparse
 import sys
 from PyQt4 import QtGui
 from argparseui import ArgparseUi
-from pygaze.libtobii import TobiiTracker
 from pygaze import libscreen
-from pygaze.eyetracker import Eyetracker
+from pygaze.eyetracker import EyeTracker
+
 
 def main():
     parser = argparse.ArgumentParser()
@@ -43,7 +43,7 @@ def main():
     root = tk.Tk()
 
     disp = libscreen.Display(disptype='psychopy', screennr=1)
-    tobii = Eyetracker(disp, trackertype='tobii')
+    tobii = EyeTracker(disp, trackertype='tobii')
 
     task = Task(root, images,
                 n_iters=args.n_iters,
