@@ -1,4 +1,4 @@
-import tkinter as tk
+import Tkinter as tk
 from PIL import ImageTk, Image
 import sys
 
