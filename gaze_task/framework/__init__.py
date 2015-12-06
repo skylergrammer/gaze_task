@@ -71,7 +71,7 @@ class Task(object):
             self.display.fill(self.screen)
             self.display.show()
             self.iter_ += 1
-        print(self.iter_, elapsed(t0))
+        print(position)
 
     def start(self):
         '''Calls the hidden _flash() method.
