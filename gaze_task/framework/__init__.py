@@ -1,8 +1,7 @@
 import sys
 from datetime import datetime
 from PIL import Image
-from pygaze.libscreen import Screen
-
+from copy import copy
 
 class Task(object):
     '''Display k image reversals that switch every delta_t milliseconds. Pauses
@@ -36,8 +35,8 @@ class Task(object):
         self.n_iters = n_iters
         self.eyetracker = eyetracker
         self.screen = screen
-        self.screen1 = Screen()
-        self.screen2 = Screen()
+        self.screen1 = copy(screen)
+        self.screen2 = copy(screen)
         self.screen1.draw_image(self.images[0])
         self.screen2.draw_image(self.images[1])
         self.screen.copy(self.screen2)

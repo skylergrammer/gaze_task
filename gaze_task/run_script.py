@@ -5,6 +5,7 @@ import sys
 from PyQt4 import QtGui
 from argparseui import ArgparseUi
 from pygaze.libscreen import Display, Screen
+from pygaze.defaults import DISPSIZE
 from pygaze.eyetracker import EyeTracker
 
 
@@ -18,7 +19,6 @@ def main():
                         help='Number of iterations [default=10]')
     parser.add_argument('--timing', default=1000,
                         help='Duration displayed for each image in millis.')
-    parser.add_argument('--resolution', nargs=2)
     parser.add_argument('--calibrate', default=False, action='store_true',
                         help='Set to perform a calibration first.')
     app = QtGui.QApplication(sys.argv)
@@ -30,8 +30,7 @@ def main():
     app.exec_()
     args = a.parse_args()
 
-    display = Display(disptype='psychopy', screennr=1,
-                      dispsize=args.resolution)
+    display = Display(disptype='psychopy', screennr=1)
     screen = Screen(disptype='psychopy')
     images = []
     images.append(args.image1)
