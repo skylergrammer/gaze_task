@@ -1,5 +1,7 @@
 import sys
-import time
+from datetime import datetime
+from PIL import Image
+from pygaze.libscreen import Screen
 
 
 class Task(object):
@@ -23,66 +25,71 @@ class Task(object):
        width : int
                width of canvas in number of pixels
     '''
-    def __init__(self, screen, display,
-                 images=None,
+    def __init__(self, screen, display, images,
                  n_iters=10,
                  delta_t=100,
                  eyetracker=None):
 
         self.display = display
-        self.screen = screen
-        self.images = images
+        self.images = [Image.open(x) for x in images]
         self.delta_t = float(delta_t)
         self.n_iters = n_iters
         self.eyetracker = eyetracker
+        self.screen = screen
+        self.screen1 = Screen()
+        self.screen2 = Screen()
+        self.screen1.draw_image(self.images[0])
+        self.screen2.draw_image(self.images[1])
+        self.screen.copy(self.screen2)
+        self.display.fill(self.screen)
+        self.display.show()
 
         if self.eyetracker is not None:
             self.eyetracker.start_recording()
         else:
             pass
-            # sys.exit('ERROR: must attach eyetracker object!')
+            sys.exit('ERROR: must attach eyetracker object!')
 
-    def _flash(self):
+    def _flash(self, t0):
 
         '''Hidden method that flashes between the images in images list every
            delta_t milliseconds.
         '''
-        t0 = time.time() * 10000
-        # position = self.eyetracker.sample()
-        self.is_focused = True  # check_focus(position)
-
-        while time.time()*10000 - t0 < self.delta_t:
+        position = self.eyetracker.sample()
+        self.is_focused = check_focus(position)
+        while elapsed(t0) < self.delta_t:
             pass
 
         if self.is_focused:
             idx = self.iter_ % 2
             self.screen.clear()
-            self.screen.draw_image(self.images[idx])
+
+            if idx == 0:
+                self.screen.copy(self.screen1)
+            else:
+                self.screen.copy(self.screen2)
             self.display.fill(self.screen)
             self.display.show()
             self.iter_ += 1
+        print(self.iter_, elapsed(t0))
 
     def start(self):
         '''Calls the hidden _flash() method.
         '''
         self.iter_ = 0
         while self.iter_ < self.n_iters:
-            self._flash()
+            t0 = datetime.now()
+            self._flash(t0)
 
         self.display.close()
-        # self.eyetracker.stop_recording()
-        #sys.exit()
-
-    def show(self, image):
-        self.screen.clear()
-        self.screen.draw_image(image)
-        self.display.fill(self.screen)
-        self.display.show()
+        self.eyetracker.stop_recording()
 
     def calibrate(self):
         self.eyetracker.calibrate()
         return self
 
+def elapsed(t0):
+    return (datetime.now() - t0).total_seconds() * 1000
 
 def fake_eye_tracker(iter_):
     if iter_ % 5 == 0 and iter_ > 0:
