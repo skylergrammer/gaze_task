@@ -38,7 +38,7 @@ def main():
 
     task = Task(screen, display, images,
                 delta_t=args.timing,
-                eyetracker=None)
+                eyetracker=tobii)
     if args.calibrate:
         task.calibrate()
 
