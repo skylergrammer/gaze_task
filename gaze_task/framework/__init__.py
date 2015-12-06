@@ -81,13 +81,8 @@ class Task(object):
             t0 = datetime.now()
             self._flash(t0)
 
-        self.display.close()
         self.eyetracker.stop_recording()
-        sys.exit()
 
-    def calibrate(self):
-        self.eyetracker.calibrate()
-        return self
 
 def elapsed(t0):
     return (datetime.now() - t0).total_seconds() * 1000
