@@ -83,6 +83,7 @@ class Task(object):
 
         self.display.close()
         self.eyetracker.stop_recording()
+        sys.exit()
 
     def calibrate(self):
         self.eyetracker.calibrate()
