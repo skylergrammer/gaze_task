@@ -90,7 +90,7 @@ setup(
     # pip to create the appropriate form of executable for the target platform.
     entry_points={
         'console_scripts': [
-            'gaze_task_run=gaze_task.run_script:main'
+            'run_gaze_task=gaze_task.run_script:main'
         ],
     },
 )

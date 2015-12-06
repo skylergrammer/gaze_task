@@ -22,6 +22,8 @@ def main():
                         help='Width in pixels [default=500]')
     parser.add_argument('--timing', default=500,
                         help='Duration displayed for each image in millis.')
+    parser.add_argument('--calibrate', default=False, action='store_true',
+                        help='Set to perform a calibration first.')
     app = QtGui.QApplication(sys.argv)
     a = ArgparseUi(parser,
                    use_save_load_button=True,
@@ -30,10 +32,6 @@ def main():
     a.show()
     app.exec_()
     args = a.parse_args()
-    if args.height is not None and args.width is not None:
-        args.autosize = False
-
-    images = [args.image1, args.image2]
 
     display = Display(disptype='psychopy', screennr=0)
     screen = Screen()
@@ -43,6 +41,9 @@ def main():
                 images=images,
                 delta_t=args.timing,
                 eyetracker=None)
+    if args.calibrate:
+        task.calibrate()
+
     task.start()
 
 if __name__ == '__main__':

@@ -1,6 +1,7 @@
 import sys
 import time
 
+
 class Task(object):
     '''Display k image reversals that switch every delta_t milliseconds. Pauses
        image switching if is_looking signal is False.
@@ -22,8 +23,11 @@ class Task(object):
        width : int
                width of canvas in number of pixels
     '''
-    def __init__(self, screen, display, images=None,
-                 n_iters=10, delta_t=100, eyetracker=None):
+    def __init__(self, screen, display,
+                 images=None,
+                 n_iters=10,
+                 delta_t=100,
+                 eyetracker=None):
 
         self.display = display
         self.screen = screen
@@ -74,6 +78,10 @@ class Task(object):
         self.screen.draw_image(image)
         self.display.fill(self.screen)
         self.display.show()
+
+    def calibrate(self):
+        self.eyetracker.calibrate()
+        return self
 
 
 def fake_eye_tracker(iter_):
