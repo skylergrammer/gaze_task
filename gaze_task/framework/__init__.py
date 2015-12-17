@@ -3,6 +3,7 @@ from datetime import datetime
 from PIL import Image
 from copy import copy
 
+
 class Task(object):
     '''Display k image reversals that switch every delta_t milliseconds. Pauses
        image switching if is_looking signal is False.
@@ -34,19 +35,18 @@ class Task(object):
         self.delta_t = float(delta_t)
         self.n_iters = n_iters
         self.eyetracker = eyetracker
-        self.screen = screen
-        self.screen1 = copy(screen)
-        self.screen2 = copy(screen)
-        self.screen1.draw_image(self.images[0])
-        self.screen2.draw_image(self.images[1])
-        self.screen.copy(self.screen2)
-        self.display.fill(self.screen)
+        self.scrn = screen
+        self.scrn1 = copy(self.scrn)
+        self.scrn2 = copy(self.scrn)
+        self.scrn1.draw_image(self.images[0])
+        self.scrn2.draw_image(self.images[1])
+        self.scrn.copy(self.scrn1)
+        self.display.fill(self.scrn)
         self.display.show()
 
         if self.eyetracker is not None:
             self.eyetracker.start_recording()
         else:
-            pass
             sys.exit('ERROR: must attach eyetracker object!')
 
     def _flash(self, t0):
@@ -61,16 +61,16 @@ class Task(object):
 
         if self.is_focused:
             idx = self.iter_ % 2
-            self.screen.clear()
+            self.scrn.clear()
 
             if idx == 0:
-                self.screen.copy(self.screen1)
+                self.scrn.copy(self.scrn1)
             else:
-                self.screen.copy(self.screen2)
-            self.display.fill(self.screen)
+                self.scrn.copy(self.scrn2)
+
+            self.display.fill(self.scrn)
             self.display.show()
             self.iter_ += 1
-        print(position)
 
     def start(self):
         '''Calls the hidden _flash() method.
@@ -86,11 +86,20 @@ class Task(object):
 def elapsed(t0):
     return (datetime.now() - t0).total_seconds() * 1000
 
-def fake_eye_tracker(iter_):
-    if iter_ % 5 == 0 and iter_ > 0:
-        return False
-    else:
-        return True
+
+class FakeEyeTracker(object):
+
+    def __init__(self):
+        pass
+
+    def stop_recording(self):
+        pass
+
+    def start_recording(self):
+        pass
+
+    def sample(self):
+        return (500, 500)
 
 
 def check_focus(position):

@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-from gaze_task.framework import Task
+from gaze_task.framework import Task, FakeEyeTracker
 import argparse
 import sys
 from PyQt4 import QtGui
@@ -19,8 +19,11 @@ def main():
                         help='Number of iterations [default=10]')
     parser.add_argument('--timing', default=1000,
                         help='Duration displayed for each image in millis.')
-    parser.add_argument('--calibrate', default=False, action='store_true',
-                        help='Set to perform a calibration first.')
+    parser.add_argument('--displaynumber', default=1, type=int,
+                        help='Monitor to show the task.')
+    parser.add_argument('--resolution', default='1920 1080', type=str,
+                        help='The dimensions of the display in pixels e.g. 1920 1080')
+    parser.add_argument('--testing', action='store_true', default=False)
     app = QtGui.QApplication(sys.argv)
     a = ArgparseUi(parser,
                    use_save_load_button=True,
@@ -29,20 +32,26 @@ def main():
     a.show()
     app.exec_()
     args = a.parse_args()
-
-    display = Display(disptype='psychopy', screennr=1)
-    screen = Screen(disptype='psychopy')
+    resolution = [int(x) for x in args.resolution.split()]
+    display = Display(disptype='psychopy',
+                      dispsize=resolution,
+                      screennr=args.displaynumber)
+    screen = Screen(disptype='psychopy',
+                    dispsize=resolution,
+                    screennr=args.displaynumber)
     images = []
     images.append(args.image1)
     images.append(args.image2)
-    tobii = EyeTracker(display, trackertype='tobii')
+
+    if args.testing:
+        tobii = FakeEyeTracker()
+    else:
+        tobii = EyeTracker(display, trackertype='tobii')
 
     task = Task(screen, display, images,
                 delta_t=args.timing,
                 n_iters=args.n_iters,
                 eyetracker=tobii)
-    if args.calibrate:
-        task.calibrate()
 
     task.start()
     display.close()
