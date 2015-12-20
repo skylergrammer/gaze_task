@@ -1,7 +1,7 @@
 import sys
 from datetime import datetime
 from PIL import Image
-from copy import copy
+from pygaze.libscreen import Screen
 
 
 class Task(object):
@@ -25,24 +25,22 @@ class Task(object):
        width : int
                width of canvas in number of pixels
     '''
-    def __init__(self, screen, display, images,
+    def __init__(self, screen_params, display, images,
                  n_iters=10,
                  delta_t=100,
                  eyetracker=None):
 
         self.display = display
-        self.images = [Image.open(x) for x in images]
+        self.images = images
         self.delta_t = float(delta_t)
         self.n_iters = n_iters
         self.eyetracker = eyetracker
-        self.scrn = screen
-        self.scrn1 = copy(self.scrn)
-        self.scrn2 = copy(self.scrn)
-        self.scrn1.draw_image(self.images[0])
-        self.scrn2.draw_image(self.images[1])
-        self.scrn.copy(self.scrn1)
-        self.display.fill(self.scrn)
-        self.display.show()
+
+        # Create screens for both images; doing it now means it is fast
+        self.scrn1 = Screen(**screen_params)
+        self.scrn1.draw_image(images[0])
+        self.scrn2 = Screen(**screen_params)
+        self.scrn2.draw_image(images[1])
 
         if self.eyetracker is not None:
             self.eyetracker.start_recording()
@@ -56,21 +54,21 @@ class Task(object):
         '''
         position = self.eyetracker.sample()
         self.is_focused = check_focus(position)
+
+        # Pause for specified milliseconds
         while elapsed(t0) < self.delta_t:
             pass
 
+        # If eye tracker detects participant is focused switch images
         if self.is_focused:
-            idx = self.iter_ % 2
-            self.scrn.clear()
-
-            if idx == 0:
-                self.scrn.copy(self.scrn1)
+            if self.iter_ % 2 == 0:
+                self.display.fill(screen=self.scrn1)
             else:
-                self.scrn.copy(self.scrn2)
-
-            self.display.fill(self.scrn)
+                self.display.fill(screen=self.scrn2)
             self.display.show()
             self.iter_ += 1
+        else:
+            pass
 
     def start(self):
         '''Calls the hidden _flash() method.
@@ -79,7 +77,6 @@ class Task(object):
         while self.iter_ < self.n_iters:
             t0 = datetime.now()
             self._flash(t0)
-
         self.eyetracker.stop_recording()
 
 

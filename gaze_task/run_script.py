@@ -4,9 +4,10 @@ import argparse
 import sys
 from PyQt4 import QtGui
 from argparseui import ArgparseUi
-from pygaze.libscreen import Display, Screen
-from pygaze.defaults import DISPSIZE
+from pygaze.libscreen import Display
 from pygaze.eyetracker import EyeTracker
+from PIL import Image
+import ctypes
 
 
 def main():
@@ -36,19 +37,26 @@ def main():
     display = Display(disptype='psychopy',
                       dispsize=resolution,
                       screennr=args.displaynumber)
-    screen = Screen(disptype='psychopy',
-                    dispsize=resolution,
-                    screennr=args.displaynumber)
+    screen_params = dict(disptype='psychopy',
+                         dispsize=resolution,
+                         screennr=args.displaynumber
+                         )
     images = []
     images.append(args.image1)
     images.append(args.image2)
-
+    try:
+        open_images = [Image.open(x) for x in images]
+        # ctypes.windll.user32.MessageBoxA(0, "Your text", "Your title", 1)
+    except Exception:
+        sys.exit('Unable to open images.  Check filenames.')
     if args.testing:
         tobii = FakeEyeTracker()
+        print("Using FakeEyeTracker.")
     else:
         tobii = EyeTracker(display, trackertype='tobii')
+        print("Using real EyeTracker")
 
-    task = Task(screen, display, images,
+    task = Task(screen_params, display, open_images,
                 delta_t=args.timing,
                 n_iters=args.n_iters,
                 eyetracker=tobii)
