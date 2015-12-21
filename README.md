@@ -7,7 +7,8 @@ The purpose of the gaze task app is to alternate between two images for N iterat
 
 ### Installation of dependencies
 I will be operating under the assumption that the installation will be on a windows computer. If you're using Linux or OS X, I'll assume you know how to install dependencies using the terminal.
-1. Download and unzip WinPython PyGaze to any location
+
+1. Download and unzip WinPython PyGaze to any location.
 2. Navigate to the python directory and then the Scripts directory within. E.g. if WinPython-PyGaze-0.4 is located in the Downloads directory, navigate to `C:\Users\<username>\Downloads\WinPython-PyGaze-0.4\python-2.7.3\Scripts`.
 3. From within Python2.7.3\Scripts, open a cmd shell by typing `cmd` into the explorer bar.
 4. In the cmd shell, type `easy_install.exe argparseui`. Assuming you're connected to the internet, this will perform the download and installation of ArgparseUi to the WinPython's python.
