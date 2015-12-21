@@ -7,7 +7,11 @@ from argparseui import ArgparseUi
 from pygaze.libscreen import Display
 from pygaze.eyetracker import EyeTracker
 from PIL import Image
-import ctypes
+import tkMessageBox
+try:
+    import Tkinter as tkinter
+except:
+    import tkinter
 
 
 def main():
@@ -46,9 +50,15 @@ def main():
     images.append(args.image2)
     try:
         open_images = [Image.open(x) for x in images]
-        # ctypes.windll.user32.MessageBoxA(0, "Your text", "Your title", 1)
+
     except Exception:
-        sys.exit('Unable to open images.  Check filenames.')
+        err_msg = "The image(s) %s and %s do not appear to be the correct filename or path" % tuple(images)
+        window = tkinter.Tk()
+        window.wm_withdraw()
+        tkMessageBox.showinfo(title="ERROR: Unable to open images",
+                              message=err_msg)
+        window.destroy()
+        sys.exit()
     if args.testing:
         tobii = FakeEyeTracker()
         print("Using FakeEyeTracker.")

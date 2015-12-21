@@ -1,0 +1,11 @@
+--n_iters
+10
+--timing
+1000
+--displaynumber
+0
+--resolution
+1920 1080
+--testing
+C:\Users\skyler.grammer\Downloads\test_images\CPD.1point4.checkerboard2.28.jpg
+C:\Users\skyler.grammer\Downloads\test_images\CPD.1point4.checkerboard1.28.jpg

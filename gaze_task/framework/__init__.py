@@ -1,6 +1,5 @@
 import sys
 from datetime import datetime
-from PIL import Image
 from pygaze.libscreen import Screen
 
 
